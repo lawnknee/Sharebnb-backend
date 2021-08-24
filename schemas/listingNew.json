@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://sharebnb.com/listingNew.schema.json",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 50
+    },
+    "city": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 20
+    },
+    "state": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 20
+    },
+    "country": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 20
+    },
+    "host_id": {
+      "type": "integer"
+    },
+    "photo_path": {
+      "type": "string",
+      "format": "uri"
+    },
+    "price": {
+      "type": "integer"
+    },
+    "details": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "title",
+    "city",
+    "state",
+    "country",
+    "host_id",
+    "price",
+    "details"
+  ]
+}

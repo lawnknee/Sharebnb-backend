@@ -2,7 +2,6 @@
 
 const db = require("../db");
 const bcrypt = require("bcrypt");
-const { sqlForPartialUpdate } = require("../helpers/sql");
 const {
   NotFoundError,
   BadRequestError,
@@ -87,14 +86,15 @@ class User {
     return user;
   }
 
-  /** Given an email, return data about user.
+  /** Given an id, return data about user.
    *
-   * Returns { first_name, last_name, email, is_admin }
+   * Returns { first_name, last_name, email, is_admin, listings }
+   *    where listings is { id, title, city, state, country, photoPath, price, details }
    *
    * Throws NotFoundError if user not found.
    **/
 
-   static async get(email) {
+  static async get(id) {
     const userRes = await db.query(
           `SELECT id,
                   first_name AS "firstName",
@@ -102,14 +102,32 @@ class User {
                   email,
                   is_admin AS "isAdmin"
            FROM users
-           WHERE email = $1`,
-        [email],
+           WHERE id = $1`,
+        [id],
     );
 
     const user = userRes.rows[0];
 
-    if (!user) throw new NotFoundError(`No user: ${email}`);
+    if (!user) throw new NotFoundError(`No user: ${id}`);
+    
+    const userListingsRes = await db.query(
+      `SELECT l.id, 
+              l.title, 
+              l.city, 
+              l.state, 
+              l.country, 
+              l.photo_path AS "photoPath", 
+              l.price, 
+              l.details
+      FROM listings AS l
+      WHERE l.host_id = $1`,
+      [id]
+    );
+
+    user.listings = userListingsRes.rows;
 
     return user;
   }
 }
+
+module.exports = User;

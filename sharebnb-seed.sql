@@ -18,7 +18,7 @@ CREATE TABLE listings (
   city VARCHAR(20) NOT NULL,
   state VARCHAR(20) NOT NULL,
   country VARCHAR(20) NOT NULL,
-  user_Id INTEGER NOT NULL REFERENCES users,
+  host_id INTEGER NOT NULL REFERENCES users,
   photo_path TEXT,
   price NUMERIC NOT NULL,
   details TEXT NOT NULL
@@ -28,7 +28,7 @@ INSERT INTO listings (title,
                       city, 
                       state, 
                       country, 
-                      user_Id, 
+                      host_id, 
                       photo_path, price, 
                       details)
 VALUES ('testuser1 test listing', 'Los Angeles', 'California', 'United States', 

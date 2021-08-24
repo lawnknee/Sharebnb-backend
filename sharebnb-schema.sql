@@ -14,7 +14,7 @@ CREATE TABLE listings (
   city VARCHAR(20) NOT NULL,
   state VARCHAR(20) NOT NULL,
   country VARCHAR(20) NOT NULL,
-  user_Id INTEGER NOT NULL REFERENCES users,
+  host_id INTEGER NOT NULL REFERENCES users,
   photo_path TEXT,
   price NUMERIC (10, 2) NOT NULL,
   details TEXT NOT NULL
