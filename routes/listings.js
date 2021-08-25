@@ -7,19 +7,22 @@ const jsonschema = require("jsonschema");
 const express = require("express");
 const Listing = require("../models/listing");
 const listingNewSchema = require("../schemas/listingNew.json");
+const { BadRequestError} = require("../expressError");
 
 const router = new express.Router();
 
 /** POST / { listing } =>  { listing }
  *
- * listing should be { title, city, state, country, host_id, photoPath, price, details }
+ * listing should be { title, city, state, country, host_id, photoUrl, price, details }
  *
- * Returns { id, title, city, state, country, host_id, photoPath, price, details }
+ * Returns { id, title, city, state, country, host_id, photoUrl, price, details }
  *
  * Authorization required: logged in
  */
 
  router.post("/", async function (req, res, next) {
+  req.body.price = +req.body.price;
+
   const validator = jsonschema.validate(req.body, listingNewSchema);
   if (!validator.valid) {
     const errs = validator.errors.map(e => e.stack);
@@ -31,7 +34,7 @@ const router = new express.Router();
 });
 
 /** GET /  =>
- *   { listings: [ { id, title, city, price, photoPath, details }, ...] }
+ *   { listings: [ { id, title, city, price, photoUrl, details }, ...] }
  *
  * Authorization required: none
  */
@@ -60,7 +63,7 @@ const router = new express.Router();
 
 /** GET /[id]  =>  { listing }
  *
- *  Listing is { id, title, city, state, country, host_id, photoPath, price, details, host }
+ *  Listing is { id, title, city, state, country, host_id, photoUrl, price, details, host }
  *    where host is [{ id, firstName, lastName }]
  *
  * Authorization required: none

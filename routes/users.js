@@ -13,7 +13,7 @@ const router = express.Router();
 /** GET /[id] => { user }
  *
  * Returns { firstName, lastName, email, isAdmin, listings }
- *   where listings is { id, title, city, state, country, photoPath, price, details }
+ *   where listings is { id, title, city, state, country, photoUrl, price, details }
  *
  * Authorization required: logged in
  **/
