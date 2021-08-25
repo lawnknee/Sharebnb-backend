@@ -3,16 +3,16 @@
 const db = require("../db");
 const { NotFoundError } = require("../expressError");
 
-// DEFAULT_PHOTO_URL from s3
+const DEFAULT_PHOTO_URL = "https://sharebnb-listing-photos.s3.us-west-1.amazonaws.com/default-listing.jpg";
 
 /** Related functions for listings. */
 
 class Listing {
   /** Create a listing (from data), update db, return new listing data.
    *
-   * Data should be { title, city, state, country, host_id, photoPath, price, details }
+   * Data should be { title, city, state, country, host_id, photo_url, price, details }
    *
-   * Returns { id, title, city, state, country, host_id, photoPath, price, details }
+   * Returns { id, title, city, state, country, host_id, photo_url, price, details }
    *
    **/
 
@@ -22,7 +22,7 @@ class Listing {
     state,
     country,
     host_id,
-    photoPath,
+    photo_url,
     price,
     details,
   }) {
@@ -32,7 +32,7 @@ class Listing {
                                state, 
                                country, 
                                host_id, 
-                               photo_path, 
+                               photo_url, 
                                price, 
                                details)
            VALUES
@@ -42,10 +42,10 @@ class Listing {
                      city, 
                      state, 
                      country, 
-                     photo_path AS "photoPath", 
+                     photo_url AS "photoUrl", 
                      price, 
                      details`,
-      [title, city, state, country, host_id, photoPath, price, details]
+      [title, city, state, country, host_id, photo_url, price, details]
     );
     const listing = result.rows[0];
 
@@ -54,7 +54,7 @@ class Listing {
 
   /** Find all listings.
    *
-   * Returns [{ id, title, city, price, photoPath, details }, ...]
+   * Returns [{ id, title, city, price, photoUrl, details }, ...]
    * */
 
   static async findAll() {
@@ -63,7 +63,7 @@ class Listing {
              title,
              city,
              price,
-             photo_path AS "photoPath",
+             photo_url AS "photoUrl",
              details
         FROM listings
         ORDER BY city
@@ -73,7 +73,7 @@ class Listing {
 
   /** Given a listing id, return data about listing.
    *
-   * Returns { id, title, city, state, country, host_id, photoPath, price, details, host }
+   * Returns { id, title, city, state, country, host_id, photoUrl, price, details, host }
    *    where host is [{ id, firstName, lastName }]
    *
    * Throws NotFoundError if not found.
@@ -87,7 +87,7 @@ class Listing {
                 state,
                 country,
                 host_id AS "hostId",
-                photo_path AS "photoPath",
+                photo_url AS "photoPath",
                 price,
                 details
            FROM listings
@@ -124,7 +124,7 @@ class Listing {
       `SELECT id,
                   title,
                   city,
-                  photo_path AS "photoPath",
+                  photo_url AS "photoPath",
                   price
             FROM listings
             WHERE title ILIKE $1`,

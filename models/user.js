@@ -89,7 +89,7 @@ class User {
   /** Given an id, return data about user.
    *
    * Returns { first_name, last_name, email, is_admin, listings }
-   *    where listings is { id, title, city, state, country, photoPath, price, details }
+   *    where listings is { id, title, city, state, country, photoUrl, price, details }
    *
    * Throws NotFoundError if user not found.
    **/
@@ -116,7 +116,7 @@ class User {
               l.city, 
               l.state, 
               l.country, 
-              l.photo_path AS "photoPath", 
+              l.photo_url AS "photoUrl", 
               l.price, 
               l.details
       FROM listings AS l
