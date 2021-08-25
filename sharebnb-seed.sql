@@ -19,7 +19,7 @@ CREATE TABLE listings (
   state VARCHAR(20) NOT NULL,
   country VARCHAR(20) NOT NULL,
   host_id INTEGER NOT NULL REFERENCES users,
-  photo_path TEXT,
+  photo_url TEXT,
   price NUMERIC NOT NULL,
   details TEXT NOT NULL
 );
@@ -29,7 +29,7 @@ INSERT INTO listings (title,
                       state, 
                       country, 
                       host_id, 
-                      photo_path, price, 
+                      photo_url, price, 
                       details)
 VALUES ('testuser1 test listing', 'Los Angeles', 'California', 'United States', 
         1, 'test_listing_1.jpeg', 150, 'Beautiful downtown Condo'),
