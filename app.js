@@ -11,7 +11,6 @@ const { NotFoundError } = require("./expressError");
 // const authRoutes = require("./routes/auth");
 const listingsRoutes = require("./routes/listings");
 const usersRoutes = require("./routes/users");
-// const jobsRoutes = require("./routes/jobs");
 
 const morgan = require("morgan");
 
