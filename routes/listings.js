@@ -3,33 +3,52 @@
 /** Routes for listings. */
 
 const jsonschema = require("jsonschema");
+const { Buffer } = require("buffer");
+const fs = require('fs');
 
 const express = require("express");
+const S3upload = require("../s3_upload")
+const multer = require("multer");
+const upload = multer();
+
 const Listing = require("../models/listing");
+
 const listingNewSchema = require("../schemas/listingNew.json");
+const { ensureLoggedIn } = require("../middleware/auth")
 const { BadRequestError} = require("../expressError");
 
 const router = new express.Router();
 
 /** POST / { listing } =>  { listing }
  *
- * listing should be { title, city, state, country, host_id, photoUrl, price, details }
+ * listing should be { title, city, state, country, host_id, photo_url, price, details }
  *
  * Returns { id, title, city, state, country, host_id, photoUrl, price, details }
  *
  * Authorization required: logged in
  */
+  // TODO: add ensureLoggedIn after
 
- router.post("/", async function (req, res, next) {
-  req.body.price = +req.body.price;
+ router.post("/", upload.single('photoFile'), async function (req, res, next) {
+  let body = req.body;
+  body.price = +body.price;
+  body.host_id = +body.host_id;
 
-  const validator = jsonschema.validate(req.body, listingNewSchema);
-  if (!validator.valid) {
-    const errs = validator.errors.map(e => e.stack);
-    throw new BadRequestError(errs);
-  }
+  console.log("This is req.file", req.file);
 
-  const listing = await Listing.create(req.body);
+  body.photo_url = await S3upload(req.file);
+  console.log("photo_url:", body.photo_url);
+
+  // TODO: makes notes about what middleware if doing, what buffer is
+  // we're never writing photo do disc, just storing in memory
+
+  // const validator = jsonschema.validate(body, listingNewSchema);
+  // if (!validator.valid) {
+  //   const errs = validator.errors.map(e => e.stack);
+  //   throw new BadRequestError(errs);
+  // }
+  
+  const listing = await Listing.create(body);
   return res.status(201).json({ listing });
 });
 

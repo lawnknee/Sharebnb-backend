@@ -6,6 +6,7 @@ const jsonschema = require("jsonschema");
 
 const express = require("express");
 const User = require("../models/user");
+const { ensureLoggedIn } = require("../middleware/auth")
 
 const router = express.Router();
 
@@ -18,7 +19,7 @@ const router = express.Router();
  * Authorization required: logged in
  **/
 
- router.get("/:id", async function (req, res, next) {
+ router.get("/:id", ensureLoggedIn, async function (req, res, next) {
   try {
     const user = await User.get(req.params.id);
     return res.json({ user });
