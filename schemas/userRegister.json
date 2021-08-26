@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "http://sharebnb.com/userRegister.schema.json",
+  "$id": "http://sharebnb/userRegister.schema.json",
   "type": "object",
   "properties": {
     "firstName": {
