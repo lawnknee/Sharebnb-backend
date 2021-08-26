@@ -9,6 +9,9 @@ const SECRET_KEY = process.env.SECRET_KEY || "secret-dev";
 
 const PORT = +process.env.PORT || 3001;
 
+// AWS config
+const S3_BUCKET = process.env.S3_BUCKET;
+
 // Use dev database, testing database, or via env var, production database
 function getDatabaseUri() {
   return (process.env.NODE_ENV === "test")
@@ -32,4 +35,5 @@ module.exports = {
   PORT,
   BCRYPT_WORK_FACTOR,
   getDatabaseUri,
+  S3_BUCKET
 };
