@@ -1,30 +1,44 @@
+"use strict";
+
+const fs = require('fs');
+
+const { S3_BUCKET } = require("./config");
+
 // Load the AWS SDK for Node.js
 var AWS = require('aws-sdk');
+
 // Set the region 
 AWS.config.update({region: 'us-west-1'});
 
 // Create S3 service object
 var s3 = new AWS.S3({apiVersion: '2006-03-01'});
 
-// call S3 to retrieve upload file to specified bucket
-var uploadParams = {Bucket: process.argv[2], Key: '', Body: ''};
-var file = process.argv[3];
+/** Takes in a photo file and reads the file.
+ * 
+ * Builds the parameter object according to AWS docs.
+ * Calls upload function on S3 client with params and callback func.
+ * 
+ * Returns 
+ */
+async function S3upload(file) {
+  // const photo = fs.readFileSync(file);
 
-// Configure the file stream and obtain the upload parameters
-var fs = require('fs');
-var fileStream = fs.createReadStream(file);
-fileStream.on('error', function(err) {
-  console.log('File Error', err);
-});
-uploadParams.Body = fileStream;
-var path = require('path');
-uploadParams.Key = path.basename(file);
+  const params = {
+    Bucket: S3_BUCKET,
+    Key: file.originalname,
+    Body: file.buffer,
+    ContentDisposition: "inline",
+    ContentType: file.mimetype
+  };
 
-// call S3 to retrieve upload file to specified bucket
-s3.upload (uploadParams, function (err, data) {
-  if (err) {
-    console.log("Error", err);
-  } if (data) {
-    console.log("Upload Success", data.Location);
-  }
-});
+  let response = await s3.upload(params, function (err, data) {
+    if (err) {
+      throw err;
+    }
+    console.log(`File uploaded successfully at: ${data.Location}`)
+  });
+
+  return `https://${S3_BUCKET}.s3.us-west-1.amazonaws.com${response.singlePart.httpRequest.path}`;
+}
+
+module.exports = S3upload;
