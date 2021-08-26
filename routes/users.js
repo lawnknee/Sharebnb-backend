@@ -19,7 +19,7 @@ const router = express.Router();
  * Authorization required: logged in
  **/
 
- router.get("/:id", ensureLoggedIn, async function (req, res, next) {
+ router.get("/:id", async function (req, res, next) {
   try {
     const user = await User.get(req.params.id);
     return res.json({ user });
