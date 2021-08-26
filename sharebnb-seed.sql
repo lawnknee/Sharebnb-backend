@@ -32,6 +32,6 @@ INSERT INTO listings (title,
                       photo_url, price, 
                       details)
 VALUES ('testuser1 test listing', 'Los Angeles', 'California', 'United States', 
-        1, 'test_listing_1.jpeg', 150, 'Beautiful downtown Condo'),
+        1, 'https://sharebnb-listing-photos.s3.us-west-1.amazonaws.com/test_listing_1.jpeg', 150, 'Beautiful downtown Condo'),
        ('testadmin1 test listing', 'San Francisco', 'California', 'United States', 
-        2, 'test_listing_2.jpeg', 200, 'Modern downtown Condo');
+        2, 'https://sharebnb-listing-photos.s3.us-west-1.amazonaws.com/test_listing_2.jpeg', 200, 'Modern downtown Condo');
