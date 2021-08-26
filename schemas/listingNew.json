@@ -27,8 +27,7 @@
       "type": "integer"
     },
     "photo_url": {
-      "type": "string",
-      "format": "uri"
+      "type": "string"
     },
     "price": {
       "type": "integer"
