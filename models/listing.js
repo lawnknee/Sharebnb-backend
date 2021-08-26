@@ -12,7 +12,7 @@ class Listing {
    *
    * Data should be { title, city, state, country, host_id, photo_url, price, details }
    *
-   * Returns { id, title, city, state, country, host_id, photo_url, price, details }
+   * Returns { id, title, city, state, country, host_id, photoUrl, price, details }
    *
    **/
 
@@ -87,7 +87,7 @@ class Listing {
                 state,
                 country,
                 host_id AS "hostId",
-                photo_url AS "photoPath",
+                photo_url AS "photoUrl",
                 price,
                 details
            FROM listings
@@ -114,7 +114,7 @@ class Listing {
 
   /** Given a search term, return all relevant listings.
    *
-   * Returns [ { id, title, city, photoPath, price }, ...]
+   * Returns [ { id, title, city, photoUrl, price }, ...]
    *
    * Throws NotFoundError if not found.
    **/
@@ -124,7 +124,7 @@ class Listing {
       `SELECT id,
                   title,
                   city,
-                  photo_url AS "photoPath",
+                  photo_url AS "photoUrl",
                   price
             FROM listings
             WHERE title ILIKE $1`,
