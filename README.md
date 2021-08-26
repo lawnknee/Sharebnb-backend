@@ -1,4 +1,4 @@
-Project Requirements
+**Project Requirements**
 
 ShareB&B
 As we move towards a world where people share more and more things, it’s time we build an application where users can share outdoor spaces like backyards or pools!
