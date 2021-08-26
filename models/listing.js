@@ -26,6 +26,11 @@ class Listing {
     price,
     details,
   }) {
+
+    if (photo_url === "") {
+      photo_url = DEFAULT_PHOTO_URL;
+    }
+
     const result = await db.query(
       `INSERT INTO listings (title, 
                                city, 
@@ -54,7 +59,7 @@ class Listing {
 
   /** Find all listings.
    *
-   * Returns [{ id, title, city, price, photoUrl, details }, ...]
+   * Returns [{ id, title, city, state, price, photoUrl }, ...]
    * */
 
   static async findAll() {
@@ -62,9 +67,9 @@ class Listing {
       SELECT id,
              title,
              city,
+             state,
              price,
-             photo_url AS "photoUrl",
-             details
+             photo_url AS "photoUrl"
         FROM listings
         ORDER BY city
     `);
@@ -101,7 +106,9 @@ class Listing {
     if (!listing) throw new NotFoundError(`No listing: ${id}`);
 
     const userRes = await db.query(
-      `SELECT id, first_name, last_name
+      `SELECT id, 
+                first_name AS "firstName", 
+                last_name AS "lastName"
            FROM users
            WHERE id = $1`,
       [listing.hostId]
@@ -114,7 +121,7 @@ class Listing {
 
   /** Given a search term, return all relevant listings.
    *
-   * Returns [ { id, title, city, photoUrl, price }, ...]
+   * Returns [ { id, title, city, state, photoUrl, price }, ...]
    *
    * Throws NotFoundError if not found.
    **/
@@ -124,6 +131,7 @@ class Listing {
       `SELECT id,
                   title,
                   city,
+                  state,
                   photo_url AS "photoUrl",
                   price
             FROM listings
