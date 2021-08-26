@@ -28,3 +28,13 @@ CREATE TABLE messages (
   sent_at TIMESTAMP WITH TIME ZONE NOT NULL,
   read_at TIMESTAMP WITH TIME ZONE
 );
+
+-- start simple with messaging without connection to listing
+
+-- endpoints (test with insomnia)
+  -- create a message
+  -- get all messages for a user 
+
+-- user for specific listing should be able to receive messages from other users about that listing
+
+-- many to many table connect listing to host_user and guest_user through listing_id
