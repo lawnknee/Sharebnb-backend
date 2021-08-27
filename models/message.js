@@ -10,7 +10,7 @@ class Message {
    *
    * Returns { id, fromUserId, toUserId, body, sentAt }
    */
-  static async create({ fromUserId, toUserId, body, sentAt }) {
+  static async create({ fromUserId, toUserId, body }) {
     const result = await db.query(
       `INSERT INTO messages (from_user_id, 
                              to_user_id, 
@@ -22,21 +22,22 @@ class Message {
                     to_user_id AS "toUserId", 
                     body, 
                     sent_at AS "sentAt"`,
-      [fromUserId, toUserId, body, sentAt]
+      [fromUserId, toUserId, body]
     );
 
-    return results.rows[0];
+    return result.rows[0];
   }
 
   /** Update read_at for message. */
 
   static async markRead(id) {
     const result = await db.query(
-          `UPDATE messages
+      `UPDATE messages
            SET read_at = current_timestamp
              WHERE id = $1
              RETURNING id, read_at`,
-        [id]);
+      [id]
+    );
     const message = result.rows[0];
 
     if (!message) throw new NotFoundError(`No such message: ${id}`);
@@ -52,9 +53,9 @@ class Message {
    *
    */
 
-   static async get(id) {
+  static async get(id) {
     const result = await db.query(
-          `SELECT m.id,
+      `SELECT m.id,
                   m.from_user_id,
                   f.first_name AS from_firstName,
                   f.last_name AS from_lastName,
@@ -70,7 +71,8 @@ class Message {
                     JOIN users AS f ON m.from_user_id = f.id
                     JOIN users AS t ON m.to_user_id = t.id
              WHERE m.id = $1`,
-        [id]);
+      [id]
+    );
 
     let m = result.rows[0];
 
@@ -95,4 +97,44 @@ class Message {
       read_at: m.read_at,
     };
   }
+
+  /** Get all messages sent to this user by the user's id
+   *
+   * Returns [{ id, from_user, body, sent_at, read_at}...]
+   *    where from_user = { id, firstName, lastName, email }
+   */
+  static async getMessagesToUser(id) {
+    console.log("userId:", id)
+
+    const messagesRes = await db.query(
+      `SELECT m.id,
+              m.from_user_id,
+              u.first_name,
+              u.last_name,
+              u.email,
+              m.body,
+              m.sent_at,
+              m.read_at
+          FROM messages AS m
+              JOIN users AS u ON m.from_user_id = u.id
+          WHERE m.to_user_id = $1
+          ORDER BY m.sent_at`,
+      [id]
+    );
+
+    return messagesRes.rows.map(m => ({
+      id: m.id,
+      from_user: {
+        id: m.from_user_id,
+        first_name: m.first_name,
+        last_name: m.last_name,
+        email: m.email,
+      },
+      body: m.body,
+      sent_at: m.sent_at,
+      read_at: m.read_at,
+    }));
+  }
 }
+
+module.exports = Message;
