@@ -19,6 +19,49 @@ const { BadRequestError} = require("../expressError");
 
 const router = new express.Router();
 
+
+/** GET / - get all listings
+ * 
+ * Returns 
+ *    { listings: [ { id, title, city, state, price, photoUrl }, ...] }
+ *
+ * Authorization required: none
+ */
+
+ router.get("/", async function (req, res, next) {
+  const listings = await Listing.findAll();
+  return res.json({ listings });
+});
+
+/** GET /listings/search  =>  { listings }
+ * 
+ *  Gets listing title filtered by search term
+ * 
+ *  listings is
+ *    [{ id, title, city, state, price, photoUrl }, ...]
+ * 
+ * Authorization required: none
+ */
+
+ router.get("/search", async function (req, res, next) {
+  const { q } = req.query;
+  const listings = await Listing.search(q);
+  return res.json({ listings });
+});
+
+/** GET /[id]  =>  { listing }
+ *
+ *  Listing is { id, title, city, state, country, host_id, photoUrl, price, details, host }
+ *    where host is [{ id, firstName, lastName }]
+ *
+ * Authorization required: none
+ */
+
+ router.get("/:id", async function (req, res, next) {
+  const listing = await Listing.get(+req.params.id);
+  return res.json({ listing });
+});
+
 /** POST / { listing } =>  { listing }
  *
  * Expects to receive listing object with a multipart/form-data content-type.
@@ -68,44 +111,5 @@ const router = new express.Router();
   return res.status(201).json({ listing });
 });
 
-/** GET /  =>
- *   { listings: [ { id, title, city, state, price, photoUrl }, ...] }
- *
- * Authorization required: none
- */
-
- router.get("/", async function (req, res, next) {
-  const listings = await Listing.findAll();
-  return res.json({ listings });
-});
-
-/** GET /listings/search  =>  { listings }
- * 
- *  Gets listing title filtered by search term
- * 
- *  listings is
- *    [{ id, title, city, state, price, photoUrl }, ...]
- * 
- * Authorization required: none
- */
-
- router.get("/search", async function (req, res, next) {
-  const { q } = req.query;
-  const listings = await Listing.search(q);
-  return res.json({ listings });
-});
-
-/** GET /[id]  =>  { listing }
- *
- *  Listing is { id, title, city, state, country, host_id, photoUrl, price, details, host }
- *    where host is [{ id, firstName, lastName }]
- *
- * Authorization required: none
- */
-
- router.get("/:id", async function (req, res, next) {
-  const listing = await Listing.get(+req.params.id);
-  return res.json({ listing });
-});
 
 module.exports = router;
