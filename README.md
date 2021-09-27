@@ -1,6 +1,7 @@
 **Project Requirements**
 
-ShareB&B
+## ShareB&B
+
 As we move towards a world where people share more and more things, it’s time we build an application where users can share outdoor spaces like backyards or pools!
 
 Users should be able to search for homes and apartments to with an outdoor space to rent
